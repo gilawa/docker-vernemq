@@ -1,10 +1,10 @@
 FROM alpine:3.18
 
-FROM erlang:21-alpine AS build-env
+FROM erlang:24-alpine AS build-env
 
 WORKDIR /vernemq-build
 
-ARG VERNEMQ_GIT_REF=1.9.2
+ARG VERNEMQ_GIT_REF=1.13.0
 ARG TARGET=rel
 ARG VERNEMQ_REPO=https://github.com/vernemq/vernemq.git
 
@@ -13,7 +13,7 @@ ENV DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR="app=vernemq" \
     DOCKER_VERNEMQ_LOG__CONSOLE=console
 
 RUN apk --no-cache --update --available upgrade && \
-    apk add --no-cache git autoconf build-base bsd-compat-headers cmake openssl-dev bash && \
+    apk add --no-cache git autoconf build-base bsd-compat-headers cmake openssl-dev bash snappy-dev && \
     git clone -b $VERNEMQ_GIT_REF $VERNEMQ_REPO .
 
 COPY bin/build.sh build.sh

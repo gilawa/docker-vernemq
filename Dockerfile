@@ -1,8 +1,8 @@
-FROM erlang:21 AS build-env
+FROM erlang:24 AS build-env
 
 WORKDIR /vernemq-build
 
-ARG VERNEMQ_GIT_REF=1.9.2
+ARG VERNEMQ_GIT_REF=1.13.0
 ARG TARGET=rel
 ARG VERNEMQ_REPO=https://github.com/vernemq/vernemq.git
 
@@ -11,14 +11,14 @@ ENV DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR="app=vernemq" \
     DOCKER_VERNEMQ_LOG__CONSOLE=console
 
 RUN apt-get update && \
-    apt-get -y install build-essential git libssl-dev && \
+    apt-get -y install build-essential git libssl-dev libsnappy-dev && \
     git clone -b $VERNEMQ_GIT_REF $VERNEMQ_REPO .
 
 COPY bin/build.sh build.sh
 
 RUN ./build.sh $TARGET
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && \
     apt-get -y install bash procps openssl iproute2 curl jq libsnappy-dev net-tools nano && \
