@@ -1,9 +1,27 @@
+FROM erlang:21-alpine AS build-env
+
+WORKDIR /vernemq-build
+
+ARG VERNEMQ_GIT_REF=1.9.2
+ARG TARGET=rel
+ARG VERNEMQ_REPO=https://github.com/vernemq/vernemq.git
+
+# Defaults
+ENV DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR="app=vernemq" \
+    DOCKER_VERNEMQ_LOG__CONSOLE=console
+
+RUN apk --no-cache --update --available upgrade && \
+    apk add --no-cache git autoconf build-base bsd-compat-headers cmake openssl-dev bash && \
+    git clone -b $VERNEMQ_GIT_REF $VERNEMQ_REPO .
+
+COPY bin/build.sh build.sh
+
+RUN ./build.sh $TARGET
+
 FROM dhi.io/alpine-base:3.24-dev
 
-
-# RUN apk --no-cache --update --available upgrade && \
-RUN apk update && \
-    apk add --no-cache ncurses-libs libstdc++ jq curl bash snappy-dev nano && \
+RUN apk --no-cache --update --available upgrade && \
+    apk add --no-cache ncurses-libs openssl libstdc++ jq curl bash snappy-dev nano && \
     addgroup --gid 10000 vernemq && \
     adduser --uid 10000 -H -D -G vernemq -h /vernemq vernemq && \
     install -d -o vernemq -g vernemq /vernemq
@@ -11,24 +29,15 @@ RUN apk update && \
 # Defaults
 ENV DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR="app=vernemq" \
     DOCKER_VERNEMQ_LOG__CONSOLE=console \
-    PATH="/vernemq/bin:$PATH" \
-    VERNEMQ_VERSION="2.2.1"
+    PATH="/vernemq/bin:$PATH"
 WORKDIR /vernemq
 
 COPY --chown=10000:10000 bin/vernemq.sh /usr/sbin/start_vernemq
 COPY --chown=10000:10000 bin/join_cluster.sh /usr/sbin/join_cluster
 COPY --chown=10000:10000 files/vm.args /vernemq/etc/vm.args
+COPY --chown=10000:10000 --from=build-env /vernemq-build/release /vernemq
 
-# Note that the following copies a binary package under EULA (requiring a paid subscription).
-RUN echo $VERNEMQ_VERSION && \
-    ARCH=$(uname -m | sed -e 's/aarch64/arm64/') && \
-    echo $ARCH && \
-    curl -fL https://github.com/vernemq/vernemq/releases/download/$VERNEMQ_VERSION/vernemq-$VERNEMQ_VERSION.alpine.$ARCH.tar.gz -o /tmp/vernemq-$VERNEMQ_VERSION.alpine.tar.gz && \
-    tar xf /tmp/vernemq-$VERNEMQ_VERSION.alpine.tar.gz && \
-    rm /tmp/vernemq-$VERNEMQ_VERSION.alpine.tar.gz && \
-    chown -R 10000:10000 /vernemq && \
-    mkdir -p /var/lib /var/log && \
-    ln -s /vernemq/etc /etc/vernemq && \
+RUN ln -s /vernemq/etc /etc/vernemq && \
     ln -s /vernemq/data /var/lib/vernemq && \
     ln -s /vernemq/log /var/log/vernemq
 # Ports
