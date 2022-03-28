@@ -1,5 +1,7 @@
 # docker-vernemq
 
+## Please not that this repository is a fork from the offical VerneMQ repository.
+
 ## What is VerneMQ?
 
 VerneMQ is a high-performance, distributed MQTT message broker. It scales
@@ -12,15 +14,7 @@ VerneMQ is an Apache2 licensed distributed MQTT broker, developed in Erlang.
 
 ## How to use this image
 
-### 1. Accepting the VerneMQ EULA
-
-**NOTE:** To use the official Docker images you have to accept the [VerneMQ End
-User License Agreement](https://vernemq.com/end-user-license-agreement). You can
-read how to accept the VerneMQ EULA
-[here](https://docs.vernemq.com/installation/accepting-the-vernemq-eula).
-
-**NOTE 2 (TL:DR)**:
-To use the binary Docker packages (that is, the official packages from Docker Hub) or the VerneMQ binary Linux packages commercially and legally, you need a paid subscription. Accepting the EULA is your promise to do that. To avoid a subscription, you need to clone this repository and build and host your own Dockerfiles/-images.
+### 1. (Removed)
 
 ### 2. Using [Helm](https://helm.sh/) to deploy on [Kubernetes](https://kubernetes.io/)
 
@@ -36,7 +30,8 @@ For more information, check out the Helm chart [README](helm/vernemq/README.md).
 
 ### 3. Using pure Docker commands
 
-    docker run -e "DOCKER_VERNEMQ_ACCEPT_EULA=yes" --name vernemq1 -d vernemq/vernemq
+    docker build -t my-tag:vernemq:my-version .
+    docker run -e --name vernemq1 -d mytag/vernemq:my-version
 
 Sometimes you need to configure a forwarding for ports (on a Mac for example):
 
