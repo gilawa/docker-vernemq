@@ -1,6 +1,6 @@
 # docker-vernemq
 
-## Please not that this repository is a fork from the offical VerneMQ docker repository.
+### Please note that this repository is a fork from the offical VerneMQ docker repository.
 
 ## What is VerneMQ?
 
