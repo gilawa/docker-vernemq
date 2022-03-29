@@ -1,6 +1,6 @@
 # docker-vernemq
 
-## Please not that this repository is a fork from the offical VerneMQ repository.
+## Please not that this repository is a fork from the offical VerneMQ docker repository.
 
 ## What is VerneMQ?
 
@@ -13,6 +13,8 @@ products.
 VerneMQ is an Apache2 licensed distributed MQTT broker, developed in Erlang.
 
 ## How to use this image
+
+Please note that this repository is used and tested currently with the docker method (#3).
 
 ### 1. (Removed)
 
