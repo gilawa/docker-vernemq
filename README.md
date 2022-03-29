@@ -14,7 +14,7 @@ VerneMQ is an Apache2 licensed distributed MQTT broker, developed in Erlang.
 
 ## How to use this image
 
-Please note that this repository is used and tested currently with the docker method (#3).
+Please note that this repository is used and tested currently with the docker method (third section below).
 
 ### 1. (Removed)
 
