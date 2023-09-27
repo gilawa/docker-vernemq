@@ -339,6 +339,5 @@ trap 'sigterm_handler' SIGTERM
 # Start VerneMQ
 /vernemq/bin/vernemq console -noshell -noinput $@ &
 pid=$!
-sleep 45 && echo "Adding API_KEY..." && /vernemq/bin/vmq-admin api-key add key=${API_KEY:-DEFAULT}
-vmq-admin api-key show
+sleep 30 && echo "Adding API_KEY..." && /vernemq/bin/vmq-admin api-key add key=${API_KEY}
 wait $pid
