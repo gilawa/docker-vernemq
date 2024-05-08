@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: vernemq/vernemq
-  tag: 1.12.3-alpine
+  tag: 1.13.0-alpine
 
   pullPolicy: IfNotPresent
 
@@ -51,8 +51,14 @@ service:
     port: 8443
     # This is the port used by nodes to expose the service
     nodePort: 8443
+  api:
+    enabled: false
+    port: 8888
+    nodePort: 38888
+    annotations: {}
   annotations: {}
   labels: {}
+  
 
 ## Ingress can optionally be applied when enabling the MQTT websocket service
 ## This allows for an ingress controller to route web ports and arbitrary hostnames
@@ -199,12 +205,15 @@ statefulset:
 #    prometheus.io/port: "8888"
   annotations: {}
   labels: {}
+  podLabels: {}
   lifecycle: {}
 
 pdb:
   enabled: false
   minAvailable: 1
   # maxUnavailable: 1
+
+certificates: {}
 
 ## VerneMQ settings
 
@@ -225,15 +234,23 @@ additionalEnv:
 #    value: "10000"
 #  - name: DOCKER_VERNEMQ_MAX_OFFLINE_MESSAGES
 #    value: "-1"
+#  Please note that the following environment variables will conflict
+#  with configuration under the `certificates` config key
 #  - name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
 #    value: "/etc/ssl/vernemq/tls.crt"
 #  - name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
 #    value: "/etc/ssl/vernemq/tls.crt"
 #  - name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
 #    value: "/etc/ssl/vernemq/tls.key"
-
 envFrom: []
 # add additional environment variables e.g. from a configmap or secret
 # can be usefull if you wanna use authentication via files
 #  - secretRef:
 #      name: vernemq-users
+
+acl:
+  enabled: false
+  labels: {}
+  annotations: {}
+  content: |-
+    topic #
