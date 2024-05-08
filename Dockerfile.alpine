@@ -1,10 +1,10 @@
-FROM alpine:3.15
+FROM alpine:3.18
 
 FROM erlang:24-alpine AS build-env
 
 WORKDIR /vernemq-build
 
-ARG VERNEMQ_GIT_REF=1.12.5
+ARG VERNEMQ_GIT_REF=1.13.0
 ARG TARGET=rel
 ARG VERNEMQ_REPO=https://github.com/vernemq/vernemq.git
 
@@ -21,7 +21,7 @@ COPY bin/build.sh build.sh
 RUN ./build.sh $TARGET
 
 RUN apk --no-cache --update --available upgrade && \
-    apk add --no-cache ncurses-libs openssl libstdc++ jq curl bash snappy-dev nano && \
+    apk add --no-cache ncurses-libs openssl1.1-compat libstdc++ jq curl bash snappy-dev nano && \
     addgroup --gid 10000 vernemq && \
     adduser --uid 10000 -H -D -G vernemq -h /vernemq vernemq && \
     install -d -o vernemq -g vernemq /vernemq
@@ -46,7 +46,7 @@ RUN ln -s /vernemq/etc /etc/vernemq && \
 # 8080  MQTT WebSockets
 # 44053 VerneMQ Message Distribution
 # 4369  EPMD - Erlang Port Mapper Daemon
-# 8888  Prometheus Metrics
+# 8888  Health, API, Prometheus Metrics
 # 9100 9101 9102 9103 9104 9105 9106 9107 9108 9109  Specific Distributed Erlang Port Range
 
 EXPOSE 1883 8883 8080 44053 4369 8888 \

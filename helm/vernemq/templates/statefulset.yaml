@@ -29,6 +29,9 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "vernemq.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- if .Values.statefulset.podLabels }}
+        {{ toYaml .Values.statefulset.podLabels | nindent 8 }}
+      {{- end }}        
       {{- with .Values.statefulset.podAnnotations }}
       annotations:
         {{ toYaml . | nindent 8 }}
@@ -54,7 +57,7 @@ spec:
             - containerPort: 8443
               name: wss
             - containerPort: 8888
-              name: prometheus
+              name: api
             {{- range tuple 9100 9101 9102 9103 9104 9105 9106 9107 9108 9109 }}
             - containerPort: {{ . }}
             {{- end }}
@@ -82,6 +85,14 @@ spec:
             - name: DOCKER_VERNEMQ_LISTENER__WSS__DEFAULT
               value: "$(MY_POD_IP):{{ .Values.service.wss.port }}"
             {{- end }}
+            {{- if .Values.certificates }}
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+              value: "/etc/ssl/vernemq/ca.crt"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+              value: "/etc/ssl/vernemq/tls.crt"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+              value: "/etc/ssl/vernemq/tls.key"
+            {{- end }}
             {{- if .Values.additionalEnv }}
             {{ toYaml .Values.additionalEnv | nindent 12 }}
             {{- end }}
@@ -92,7 +103,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: prometheus
+              port: api
               scheme: HTTP
             initialDelaySeconds: {{ .Values.statefulset.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.statefulset.livenessProbe.periodSeconds }}
@@ -102,7 +113,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: prometheus
+              port: api
               scheme: HTTP
             initialDelaySeconds: {{ .Values.statefulset.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.statefulset.readinessProbe.periodSeconds }}
@@ -119,6 +130,16 @@ spec:
               mountPath: {{ .path }}
               readOnly: true
             {{- end }}
+            {{- if .Values.certificates }}
+            - name: listener-certificates
+              mountPath: /etc/ssl/vernemq
+            {{- end }}
+            {{- if .Values.acl.enabled }}
+            - name: vernemq-acl
+              mountPath: /vernemq/etc/vmq.acl
+              subPath: vernemq-acl
+              readOnly: true
+          {{- end }}
           {{- if .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
           {{- end }}
@@ -169,12 +190,24 @@ spec:
           secret:
             secretName: {{ .secretName }}
         {{- end }}
+        {{- if .Values.certificates }}
+        - name: listener-certificates
+          secret:
+            secretName: {{ include "vernemq.fullname" . }}-certs
+        {{- end }}
+        {{- if .Values.acl.enabled }}
+        - name: vernemq-acl
+          configMap:
+            name: vernemq-acl
+      {{- end }}
       {{- if .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
       {{- end }}
 {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: data
         annotations:
         {{- range $key, $value := .Values.persistentVolume.annotations }}
