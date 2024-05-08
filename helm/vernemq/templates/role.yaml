@@ -13,8 +13,5 @@ metadata:
 rules:
   - apiGroups: [""] # "" indicates the core API group
     resources: ["pods"]
-    verbs: ["get", "list"]
-  - apiGroups: ["apps"]
-    resources: ["statefulsets"]
-    verbs: ["get"]
+    verbs: ["get", "watch", "list"]
 {{- end -}}

@@ -54,7 +54,7 @@ Parameter | Description | Default
 `envFrom` | additional envFrom configmaps or secrets | see [values.yaml](values.yaml)
 `image.pullPolicy` | container image pull policy | `IfNotPresent`
 `image.repository` | container image repository | `vernemq/vernemq`
-`image.tag` | container image tag | the current versions (e.g. `1.13.0`)
+`image.tag` | container image tag | the current versions (e.g. `1.12.3`)
 `ingress.enabled` | whether to enable an ingress object to route to the WebSocket service. Requires an ingress controller and the WebSocket service to be enabled. | `false`
 `ingress.labels` | additional ingress labels | `{}`
 `ingress.annotations` | additional service annotations | `{}`
@@ -111,15 +111,6 @@ Parameter | Description | Default
 `pdb.enabled` | whether to create a Pod Disruption Budget | `false`
 `pdb.minAvailable` | PDB (min available) for the cluster | `1`
 `pdb.maxUnavailable` | PDB (max unavailable) for the cluster | `nil`
-`certificates.cert` | String (not base64 encoded) containing the listener certificate in PEM format | `nil`
-`certificates.key` | String (not base64 encoded) containing the listener private key in PEM format | `nil`
-`certificates.ca` | String (not base64 encoded) containing the CA certificate for validating client certs | `nil`
-`certificates.secret.labels` | additional labels for the created secret containing certificates and keys | `nil`
-`certificates.secret.annotations` | additional labels for the created secret containing certificates and keys | `nil` 
-`acl.enabled` | whether acls should be applied | `false`
-`acl.content` | content of the acl file | `topic #`
-`acl.labels` | additional labels on the acl configmap | `{}`
-`acl.annotations` | additional annotations on the acl configmap | `{}`
 
 Specify each parameter using the `--set key=value[,key=value]` argument to helm install. For example,
 

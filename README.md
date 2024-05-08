@@ -152,17 +152,6 @@ E.g: `allow_anonymous=on` is `-e "DOCKER_VERNEMQ_ALLOW_ANONYMOUS=on"` or
 `-e "DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT=on"`. All available configuration
 parameters can be found on https://vernemq.com/docs/configuration/.
 
-#### Erlang VM args
-
-Erlang VM args can be updated using following environment variables
-
-Env variable name                               | Description
-------------------------------------------------|-------------------------------------------------------------------------------------------
-DOCKER_VERNEMQ_ERLANG__MAX_PORTS                | Erlang max ports. Value provided will be set for `+Q` in `vm.args` file
-DOCKER_VERNEMQ_ERLANG__PROCESS_LIMIT            | Erlang process limit. Value provided will be set for `+P` in `vm.args` file
-DOCKER_VERNEMQ_ERLANG__MAX_ETS_TABLES           | Erlang Max ETS tables. Value provided will be set for `+e` in `vm.args` file
-DOCKER_VERNEMQ_ERLANG__DISTRIBUTION_BUFFER_SIZE | Erlang Distribution buffer size. Value provided will be set for `+zdbbl` in `vm.args` file
-
 #### Logging
 
 VerneMQ store crash and error log files in `/var/log/vernemq/`, and, by default, 
@@ -181,7 +170,7 @@ environment variables. If you are on such a platform you could substitute the
 dots with two underscores `__`. The example above would look like `-e
 "DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL=debug"`.
 
-There some exceptions on configuration names contains dots. You can see follow examples:
+There some some exceptions on configuration names contains dots. You can see follow examples:
 
 format in vernemq.conf | format in environment variable name
 ---------------------- | ------------------------------------
@@ -200,6 +189,3 @@ where `<USERNAME>` is the username you want to use. This can be done as many tim
 to create the users you want. The usernames will always be created in lowercase
 
 *CAVEAT* - You cannot have a `=` character in your password.
-
-### Thank you to all our contributors!
-[![contributors](https://contributors-img.web.app/image?repo=vernemq/docker-vernemq)](https://github.com/vernemq/docker-vernemq/graphs/contributors)
