@@ -2,7 +2,7 @@ FROM erlang:24 AS build-env
 
 WORKDIR /vernemq-build
 
-ARG VERNEMQ_GIT_REF=1.13.0
+ARG VERNEMQ_GIT_REF=2.2.1
 ARG TARGET=rel
 ARG VERNEMQ_REPO=https://github.com/vernemq/vernemq.git
 
@@ -18,7 +18,7 @@ COPY bin/build.sh build.sh
 
 RUN ./build.sh $TARGET
 
-FROM debian:bullseye-slim
+FROM debian:trixie-slim
 
 RUN apt-get update && \
     apt-get -y install bash procps openssl iproute2 curl jq libsnappy-dev net-tools nano adduser && \
