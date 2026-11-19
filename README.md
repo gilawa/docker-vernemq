@@ -32,8 +32,8 @@ For more information, check out the Helm chart [README](helm/vernemq/README.md).
 
 ### 3. Using pure Docker commands
 
-    docker build -t my-tag:vernemq:my-version .
-    docker run -e --name vernemq1 -d mytag/vernemq:my-version
+    docker build -t mytag/vernemq:my-version .
+    docker run --name vernemq1 -d mytag/vernemq:my-version
 
 Sometimes you need to configure a forwarding for ports (on a Mac for example):
 
