@@ -1,4 +1,4 @@
-FROM erlang:24-alpine AS build-env
+FROM erlang:29-alpine AS build-env
 
 WORKDIR /vernemq-build
 
