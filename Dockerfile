@@ -21,7 +21,7 @@ RUN ./build.sh $TARGET
 FROM debian:trixie-slim
 
 RUN apt-get update && \
-    apt-get -y install bash procps openssl iproute2 curl jq libsnappy-dev net-tools nano adduser && \
+    apt-get -y install bash procps openssl iproute2 curl jq libsnappy-dev net-tools nano adduser libsctp1 && \
     rm -rf /var/lib/apt/lists/* && \
     addgroup --gid 10000 vernemq && \
     adduser --uid 10000 --system --ingroup vernemq --home /vernemq --disabled-password vernemq
